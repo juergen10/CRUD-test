@@ -77,6 +77,24 @@ class ItemTest extends TestCase
             ]);
     }
 
+    public function test_create_item_with_missing_fields()
+    {
+        $data = [
+            'name' => '',
+            'price' => '',
+            'stock' => '',
+        ];
+
+        $response = $this->postJson('/api/items', $data);
+
+        $response->assertStatus(422)
+            ->assertJsonFragment([
+                'name' => ['The name field is required.'],
+                'price' => ['The price field is required.'],
+                'stock' => ['The stock field is required.'],
+            ]);
+    }
+
     public function test_show_returns_single_item()
     {
         $item = new Item(['name' => 'Milo', 'price' => 9000, 'stock' => 80]);
@@ -113,6 +131,38 @@ class ItemTest extends TestCase
             ->assertJsonFragment(['message' => 'Item updated successfully']);
     }
 
+    public function test_update_item_with_invalid_data()
+    {
+        $data = [
+            'name' => '',
+            'price' => 'invalid_price',
+            'stock' => -10,
+        ];
+
+        $response = $this->putJson("/api/items/1", $data);
+
+        $response->assertStatus(422)
+            ->assertJsonStructure([
+                'name',
+                'price',
+                'stock',
+            ]);
+    }
+
+    public function test_update_non_existent_item()
+    {
+        $data = [
+            'name' => 'Updated Product',
+            'price' => 6000,
+            'stock' => 15,
+            'description' => 'Updated description',
+        ];
+
+        $response = $this->putJson('/api/items/999', $data);
+
+        $response->assertStatus(404)->assertJsonFragment(['message' => 'Record not found.']);
+    }
+
     public function test_destroy_deletes_item()
     {
         $this->mock(ItemRepositoryInterface::class, function ($mock) {
@@ -123,5 +173,12 @@ class ItemTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonFragment(['message' => 'Item deleted successfully']);
+    }
+
+    public function test_delete_non_existent_item()
+    {
+        $response = $this->deleteJson('/api/items/999');
+
+        $response->assertStatus(404)->assertJsonFragment(['message' => 'Record not found.']);
     }
 }

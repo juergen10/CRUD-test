@@ -1,0 +1,240 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Item Management API",
+        "description": "API for managing items in a repository, with CRUD operations, pagination, and validation.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/items": {
+            "get": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Retrieve paginated list of items",
+                "operationId": "c8b916569299149d02051ab5f07dd461",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A paginated list of items",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "per_page": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        },
+                                        "last_page": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Create a new item",
+                "operationId": "36c07e8f05592ea2f69bb7e3d1ecb46b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "price",
+                                    "stock"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Aqua"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Bottled mineral water"
+                                    },
+                                    "price": {
+                                        "type": "integer",
+                                        "example": 2000
+                                    },
+                                    "stock": {
+                                        "type": "integer",
+                                        "example": 100
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Item created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/items/{id}": {
+            "get": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Retrieve a specific item by ID",
+                "operationId": "d2b121a68461d69c26ac47e613fd1f33",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the item to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item retrieved successfully"
+                    },
+                    "404": {
+                        "description": "Item not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Update an existing item",
+                "operationId": "72e815e5bf1d5a4e39e838a1a0b481a1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the item to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "price",
+                                    "stock"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Name"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Updated Description"
+                                    },
+                                    "price": {
+                                        "type": "integer",
+                                        "example": 3000
+                                    },
+                                    "stock": {
+                                        "type": "integer",
+                                        "example": 50
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Item updated successfully"
+                    },
+                    "404": {
+                        "description": "Item not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Items"
+                ],
+                "summary": "Delete an item",
+                "operationId": "5b886275f4c34dfd285e26d4a5a80bba",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the item to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Item deleted successfully"
+                    },
+                    "404": {
+                        "description": "Item not found"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Items",
+            "description": "Items"
+        }
+    ]
+}

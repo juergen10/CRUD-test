@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
 {
-    protected $fillable = [''];
-    
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'stock'
+    ];
 }
